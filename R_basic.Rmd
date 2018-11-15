@@ -1,0 +1,553 @@
+---
+title: "R Basic Notebook"
+output: html_notebook
+---
+
+# Introduction to R programming 
+
+Assignment operation - Create a list in R 
+```{r}
+rand_var <- c(1,2,3,4)
+rand_var
+
+rand_var[1]
+```
+
+Reading a csv file 
+```{r}
+sample_data <- read.csv("./data/simple.csv", head = TRUE, sep = ",")
+sample_data
+```
+
+
+Descriptove stats about the dataset 
+```{r}
+summary(sample_data)
+```
+
+To get more information about the function of interest 
+```{r}
+help(read.csv)
+```
+
+dir - To list all the files in a directory 
+
+getwd - Gives you the path location of where exactly the files are stored 
+
+```{r}
+dir()
+
+getwd()
+```
+
+Accessing the data frame columns 
+
+```{r}
+sample_data$trial
+
+sample_data$mass
+
+sample_data$velocity
+```
+
+Get the column names 
+
+```{r}
+names(sample_data)
+```
+
+attributes - Gives information about the names of the column, class and number of values under each column 
+
+```{r}
+attributes(sample_data)
+```
+
+# Variable Types 
+
+## Numbers 
+
+```{r}
+a <- 3 
+print(a)
+b <- sqrt(a*a+3)
+print(b)
+ls()
+```
+
+```{r}
+a <- c(1,2,3,4,5)
+print(mean(a))
+print(var(a))
+```
+
+```{r}
+a[0]
+```
+
+```{r}
+a[6]
+```
+
+```{r}
+a <- numeric(10)
+a
+```
+
+Determine the data type used for a variable
+
+```{r}
+typeof(a)
+```
+
+## Strings 
+
+```{r}
+b <- c("hello","there")
+b
+```
+
+```{r}
+a <- "hello"
+a
+```
+
+## Factors
+
+```{r}
+summary(sample_data$trial)
+```
+
+```{r}
+sample_data$velocity <- factor(sample_data$velocity)
+sample_data$velocity
+```
+
+```{r}
+summary(sample_data$velocity)
+```
+
+```{r}
+levels(sample_data$velocity)
+```
+
+## Dataframes 
+
+```{r}
+a <- c(1,2,3,4)
+b <- c(2,4,6,8)
+levels <- factor(c("A","B","A","B"))
+bubba <- data.frame(first=a,second=b,f=levels)
+
+bubba
+summary(bubba)
+```
+
+## Logical opearations
+
+```{r}
+a = TRUE
+typeof(a)
+```
+
+```{r}
+a = c(TRUE,FALSE)
+b = c(FALSE,FALSE)
+a|b
+```
+
+## Tables 
+
+One way tables
+
+```{r}
+a <- factor(c("A","A","B","A","B","B","C","A","C"))
+results <- table(a)
+results
+summary(results)
+attributes(results)
+```
+
+```{r}
+occur <- matrix(c(4,3,2),ncol=3,byrow=TRUE)
+occur
+```
+
+Two way tables 
+
+```{r}
+a <- c("Sometimes","Sometimes","Never","Always","Always","Sometimes","Sometimes","Never")
+b <- c("Maybe","Maybe","Yes","Maybe","Maybe","No","Yes","No")
+results <- table(a,b)
+results
+```
+
+# Numerical operations
+
+## Basic operations
+
+```{r}
+a <- c(1,2,3,4)
+a+5
+a-5
+a*2
+a/2
+```
+
+```{r}
+sqrt(a)
+exp(a)
+log(a)
+exp(log(a))
+```
+
+```{r}
+a <- c(1,-2,3,-4)
+b <- c(-1,2,-3,4)
+min(a,b)
+pmin(a,b)
+```
+
+Numerical Description
+
+```{r}
+mean(sample_data$mass)
+median(sample_data$mass)
+quantile(sample_data$mass)
+min(sample_data$mass)
+max(sample_data$mass)
+var(sample_data$mass)
+sd(sample_data$mass)
+```
+
+Operations on vector
+
+```{r}
+a = c(2,4,6,3,1,5)
+b = sort(a)
+b
+c = sort(a,decreasing = TRUE)
+c
+```
+
+# Probability Distribution
+
+Normal Distribution
+
+The first function we look at it is dnorm. Given a set of values it returns the height of the probability distribution at each point. If you only give the points it assumes you want to use a mean of zero and standard deviation of one. 
+
+```{r}
+dnorm(0)
+dnorm(0)*sqrt(2*pi)
+dnorm(0,mean=4)
+dnorm(0,mean=4,sd=10)
+v <- c(0,1,2)
+dnorm(v)
+x <- seq(-20,20,by=.1)
+y <- dnorm(x)
+plot(x,y)
+y <- dnorm(x,mean=2.5,sd=0.1)
+plot(x,y)
+```
+
+The second function we examine is pnorm. Given a number or a list it computes the probability that a normally distributed random number will be less than that number. This function also goes by the rather ominous title of the ???Cumulative Distribution Function.???
+
+```{r}
+pnorm(0)
+pnorm(1)
+pnorm(0,mean=2)
+pnorm(0,mean=2,sd=3)
+
+v <- c(0,1,2)
+pnorm(v)
+
+x <- seq(-20,20,by=.1)
+
+y <- pnorm(x)
+plot(x,y)
+y <- pnorm(x,mean=3,sd=4)
+plot(x,y)
+```
+
+The next function we look at is qnorm which is the inverse of pnorm. The idea behind qnorm is that you give it a probability, and it returns the number whose cumulative distribution matches the probability
+
+```{r}
+x <- seq(0,1,by=.05)
+y <- qnorm(x)
+plot(x,y)
+y <- qnorm(x,mean=3,sd=2)
+plot(x,y)
+y <- qnorm(x,mean=3,sd=0.1)
+plot(x,y)
+```
+
+The last function we examine is the rnorm function which can generate random numbers whose distribution is normal.
+
+```{r}
+rnorm(4)
+rnorm(4,mean=3)
+rnorm(4,mean=3,sd=3)
+
+y <- rnorm(200)
+hist(y)
+
+y <- rnorm(200,mean=-2)
+hist(y)
+
+y <- rnorm(200,mean=-2,sd=4)
+hist(y)
+
+qqnorm(y)
+qqline(y)
+```
+
+## T Distribution
+
+```{r}
+x <- seq(-20,20,by=.5)
+y <- dt(x,df=10)
+
+plot(x,y)
+
+y <- dt(x,df=50)
+plot(x,y)
+
+```
+
+## Binomial Distribution 
+
+```{r}
+x <- seq(0,50,by=1)
+y <- dbinom(x,50,0.2)
+
+plot(x,y)
+y <- dbinom(x,50,0.6)
+plot(x,y)
+
+x <- seq(0,100,by=1)
+y <- dbinom(x,100,0.6)
+plot(x,y)
+```
+
+## Chi-Squared Distriution 
+
+```{r}
+x <- seq(-20,20,by=.5)
+y <- dchisq(x,df=10)
+plot(x,y)
+y <- dchisq(x,df=12)
+plot(x,y)
+```
+
+# Basic Plots
+
+```{r}
+hist(sample_data$mass,main="Distribution of Mass",xlab="Mass")
+boxplot(sample_data$mass, main="Outliers - Mass", ylab="Mass")
+plot(sample_data$mass,sample_data$velocity)
+```
+
+```{r}
+x <- rnorm(10,sd=5,mean=20)
+y <- 2.5*x - 1.0 + rnorm(10,sd=9,mean=0)
+cor(x,y)
+
+x1 <- runif(8,15,25)
+y1 <- 2.5*x1 - 1.0 + runif(8,-6,6)
+
+x2 <- runif(8,15,25)
+y2 <- 2.5*x2 - 1.0 + runif(8,-6,6)
+
+plot(x,y,xlab="Independent",ylab="Dependent",main="Random Stuff")
+points(x1,y1,col=2,pch=3)
+points(x2,y2,col=4,pch=5)
+legend(14,70,c("Original","one","two"),col=c(1,2,4),pch=c(1,3,5))
+```
+
+# Linear Least Squares Regression
+
+```{r}
+year <- c(2000 ,   2001  ,  2002  ,  2003 ,   2004)
+rate <- c(9.34 ,   8.50  ,  7.62  ,  6.93  ,  6.60)
+
+plot(year,rate,
+     main="Commercial Banks Interest Rate for 4 Year Car Loan",
+     sub="http://www.federalreserve.gov/releases/g19/20050805/")
+
+cor(year,rate)
+
+fit <- lm(rate ~ year)
+fit
+
+attributes(fit)
+
+plot(year,fit$residuals)
+
+summary(fit)
+```
+
+# Data Wrangling
+
+```{r}
+a <- data.frame(one=c( 0, 1, 2),two=c("a","a","b"))
+b <- data.frame(one=c(10,11,12),two=c("c","c","d"))
+a
+b
+```
+
+```{r}
+v <- rbind(a,b)
+typeof(v)
+v
+```
+
+```{r}
+w <- cbind(a,b)
+w
+```
+
+```{r}
+names(w) = c("one","two","three","four")
+w
+```
+
+
+```{r}
+x <- list(a=rnorm(200,mean=1,sd=10),
+            b=rexp(300,10.0),
+            c=as.factor(c("a","b","b","b","c","c")))
+lapply(x, summary)
+```
+
+```{r}
+val <- data.frame(a=c(1,2,10,20,5,50),
+                    b=as.factor(c("a","a","b","b","a","b")))
+val
+```
+
+```{r}
+result <- tapply(val$a,val$b,mean)
+result
+```
+
+# OOP concepts in R 
+
+if statments
+
+```{r}
+x = 0.1
+if( x < 0.2)
+  {
+     x <- x + 1
+     cat("increment that number!\n")
+  }
+x
+```
+
+```{r}
+x = 1.0
+if ( x < 0.2)
+ {
+    x <- x + 1
+    cat("increment that number!\n")
+ } else if ( x < 2.0)
+ {
+   x <- 2.0*x
+   cat("not big enough!\n")
+ } else
+ {
+    x <- x - 1
+    cat("nah, make it smaller.\n");
+ }
+x
+```
+
+for statments 
+
+```{r}
+
+for (lupe in seq(0,1,by=0.3))
+ {
+    cat(lupe,"\n");
+ }
+
+x <- c(1,2,4,8,16)
+for (loop in x)
+ {
+    cat("value of loop: ",loop,"\n");
+ }
+```
+
+while statments
+
+```{r}
+lupe <- 1;
+x <- 1
+while(x < 4)
+ {
+    x <- rnorm(1,mean=2,sd=3)
+    cat("trying this value: ",x," (",lupe," times in loop)\n");
+    lupe <- lupe + 1
+ }
+```
+
+Repeat statement
+
+```{r}
+repeat
+  {
+    x <- rnorm(1)
+    if(x < -2.0) break
+  }
+x
+```
+
+Break and next statements
+
+```{r}
+x <- rnorm(5)
+for(lupe in x)
+ {
+     if (lupe > 2.0)
+         next
+
+     if( (lupe<0.6) && (lupe > 0.5))
+        break
+
+    cat("The value of lupe is ",lupe,"\n");
+ }
+```
+
+Switch statements
+
+```{r}
+x <- as.integer(2)
+x
+z = switch(x,1,2,3,4,5)
+z
+x <- 3.5
+z = switch(x,1,2,3,4,5)
+z
+```
+
+```{r}
+x <- "sd"
+z <- switch(x,"mean"=mean(y),"median"=median(y),"variance"=var(y),"sd"=sd(y))
+z
+```
+
+Functions
+
+```{r}
+newDef <- function(a,b)
+ {
+     x = runif(10,a,b)
+     mean(x)
+}
+
+newDef(-1,1)
+```
+
+
+References:
+https://www.cyclismo.org/tutorial/R/
+
